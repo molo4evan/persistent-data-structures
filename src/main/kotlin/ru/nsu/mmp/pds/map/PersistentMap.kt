@@ -1,4 +1,4 @@
-package ru.nsu.mmp.pds
+package ru.nsu.mmp.pds.map
 
 /**
  * Implementations of update functions must update previous and next versions as needed.
