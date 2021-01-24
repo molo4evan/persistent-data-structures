@@ -1,23 +1,24 @@
 package ru.nsu.mmp.pds.arraylist
 
+import ru.nsu.mmp.pds.PersistentDataStructure
+
 /**
  * Implementations of update functions must update previous and next versions as needed.
  */
-abstract class PersistentList<E>: List<E> {
-
-    protected var previousVersion: AbstractList<E>? = null
-
-    protected var nextVersion: AbstractList<E>? = null
-
-    fun undo() = previousVersion
-
-    fun redo() = nextVersion
-
+interface PersistentList<E>: List<E>, PersistentDataStructure<PersistentList<E>> {
     override fun containsAll(elements: Collection<E>): Boolean {
         for (e in elements) {
             if (!contains(e)) return false
         }
+
         return true
+    }
+
+    override fun contains(element: E): Boolean {
+        for (e in this) {
+            if (e == element) return true
+        }
+        return false
     }
 
     override fun isEmpty() = size == 0
@@ -28,9 +29,11 @@ abstract class PersistentList<E>: List<E> {
 
     override fun listIterator() = listIterator(0)
 
-    abstract fun add(element: E, index: Int): Boolean
+    fun add(element: E, index: Int): PersistentList<E>
 
-    abstract fun remove(index: Int): Boolean
+    fun add(element: E): PersistentList<E> = add(element, size)
 
-    abstract fun set(element: E, index: Int): Boolean
+    fun remove(index: Int): PersistentList<E>
+
+    fun set(element: E, index: Int): PersistentList<E>
 }

@@ -1,17 +1,11 @@
 package ru.nsu.mmp.pds.map
 
+import ru.nsu.mmp.pds.PersistentDataStructure
+
 /**
  * Implementations of update functions must update previous and next versions as needed.
  */
-abstract class PersistentMap<K, V> : Map<K, V> {
-
-    protected var previousVersion: PersistentMap<K, V>? = null
-
-    protected var nextVersion: PersistentMap<K, V>? = null
-
-    fun undo() = previousVersion
-
-    fun redo() = nextVersion
+abstract class PersistentMap<K, V> : Map<K, V>, PersistentDataStructure<PersistentMap<K, V>> {
 
     override fun isEmpty() = size == 0
 

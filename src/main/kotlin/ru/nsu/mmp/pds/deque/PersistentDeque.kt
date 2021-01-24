@@ -1,12 +1,14 @@
 package ru.nsu.mmp.pds.deque
 
+import ru.nsu.mmp.pds.PersistentDataStructure
+
 /**
  * Персистентный двусвязный список (аналогичный последовательностям в ФЯП).
  * Аналогичен двусторонней очереди в Java.
  * Не наследует стандартных коллекций, так как отличаются сигнатуры методов,
  * в Java нет неизменяемых очередей.
  */
-interface PersistentDeque<E>: Collection<E> {
+interface PersistentDeque<E>: Collection<E>, PersistentDataStructure<PersistentDeque<E>> {
 
     /**
      * Adds element at the start of deque.
@@ -110,18 +112,4 @@ interface PersistentDeque<E>: Collection<E> {
      * @return created list containing elements of deque in the same order
      */
     fun toList(): List<E>
-
-    /**
-     * UNDO/REDO mechanism.
-     * Go to the previous state of deque.
-     * @return previous state of deque or null if current state is the first
-     */
-    fun undo(): PersistentDeque<E>?
-
-    /**
-     * UNDO/REDO mechanism.
-     * Go to the next state of deque.
-     * @return next state of deque or null if current state is the last
-     */
-    fun redo(): PersistentDeque<E>?
 }

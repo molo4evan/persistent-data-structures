@@ -120,7 +120,7 @@ class FingerTreeDeque<E> private constructor(
         return result
     }
 
-    override fun undo(): PersistentDeque<E>? = previous
+    override fun tryToUndo() = previous
 
-    override fun redo(): PersistentDeque<E>? = next
+    override fun tryToRedo() = next
 }
