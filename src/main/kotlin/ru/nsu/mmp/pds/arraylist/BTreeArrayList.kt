@@ -1,6 +1,6 @@
 package ru.nsu.mmp.pds.arraylist
 
-open class BTreeArrayList<E: Any?> private constructor(
+open class BTreeArrayList<E : Any?> private constructor(
     private val tree: BTree<E>,
     override val size: Int = 0,
     private var previous: PersistentList<E>? = null,
@@ -19,6 +19,16 @@ open class BTreeArrayList<E: Any?> private constructor(
     override fun tryToUndo() = previous
 
     override fun tryToRedo() = next
+
+    companion object {
+        fun <E> fromList(collection: Collection<E>): BTreeArrayList<E> {
+            val empty = BTreeArrayList<E>()
+            val tree = empty.addAll(collection) as BTreeArrayList<E>
+            empty.next = null
+            tree.previous = null
+            return tree
+        }
+    }
 
     /**
      * O(log b (size))
@@ -39,6 +49,18 @@ open class BTreeArrayList<E: Any?> private constructor(
         tree = tree.updateAt(index, element)
 
         val newList = BTreeArrayList(tree, size + 1, this)
+        next = newList
+        return newList
+    }
+
+    override fun addAll(elements: Collection<E>): PersistentList<E> {
+        var i = size
+        var tree = this.tree
+        for (e in elements) {
+            tree = tree.updateAt(i++, e)
+        }
+
+        val newList = BTreeArrayList(tree, size + elements.size, this)
         next = newList
         return newList
     }
@@ -70,12 +92,16 @@ open class BTreeArrayList<E: Any?> private constructor(
 
     override fun iterator(): Iterator<E> = BTAIterator()
 
-    override fun listIterator(index: Int): ListIterator<E> = BTAListIterator()
+    override fun listIterator(index: Int): ListIterator<E> = BTAListIterator(index)
 
     override fun subList(fromIndex: Int, toIndex: Int): List<E> = BTASubList(this, fromIndex, toIndex)
 
-    private open inner class BTAIterator : Iterator<E> {
-        protected var index = 0
+    private open inner class BTAIterator(
+        protected var index: Int = 0
+    ) : Iterator<E> {
+        init {
+            if (index < 0 || index >= this@BTreeArrayList.size) throw ArrayIndexOutOfBoundsException()
+        }
 
         override fun hasNext() = index < size
 
@@ -85,7 +111,7 @@ open class BTreeArrayList<E: Any?> private constructor(
         }
     }
 
-    private inner class BTAListIterator : BTAIterator(), ListIterator<E> {
+    private inner class BTAListIterator(index: Int = 0) : BTAIterator(index), ListIterator<E> {
         override fun hasPrevious() = index > 0
 
         override fun nextIndex() = index + 1
@@ -100,7 +126,7 @@ open class BTreeArrayList<E: Any?> private constructor(
     }
 
     private inner class BTASubList(private val list: BTreeArrayList<E>, private val fromIndex: Int, toIndex: Int) :
-        BTreeArrayList<E>(tree, toIndex - fromIndex) {
+        List<E>, AbstractCollection<E>() {
 
         init {
             if (fromIndex < 0 || toIndex > list.size) {
@@ -115,16 +141,40 @@ open class BTreeArrayList<E: Any?> private constructor(
             return list[index + fromIndex]
         }
 
-        override fun remove(index: Int): PersistentList<E> {
-            return list.remove(index + fromIndex)
+        override val size = toIndex - fromIndex
+
+        override fun indexOf(element: E) = indexOfFirst { it == element }
+
+        override fun lastIndexOf(element: E) = indexOfLast { it == element }
+
+        override fun listIterator() = listIterator(0)
+
+        override fun iterator(): Iterator<E> = object : Iterator<E> {
+            var cursor = 0
+
+            override fun hasNext() = cursor < this@BTASubList.size
+
+            override fun next() = this@BTASubList[cursor++]
+
         }
 
-        override fun set(element: E, index: Int): PersistentList<E> {
-            return list.set(element, index + fromIndex)
+        override fun listIterator(index: Int) = object : ListIterator<E> {
+            var cursor = index
+
+            override fun hasNext() = cursor < this@BTASubList.size
+
+            override fun next() = this@BTASubList[cursor++]
+
+            override fun hasPrevious() = cursor > 0
+
+            override fun nextIndex() = cursor + 1
+
+            override fun previous() = this@BTASubList[cursor--]
+
+            override fun previousIndex() = cursor - 1
         }
 
-        override fun add(element: E, index: Int): PersistentList<E> {
-            return list.add(element, index + fromIndex)
-        }
+        override fun subList(fromIndex: Int, toIndex: Int) =
+            list.subList(this.fromIndex + fromIndex, this.fromIndex + toIndex)
     }
 }

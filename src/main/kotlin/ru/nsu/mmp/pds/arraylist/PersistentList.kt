@@ -33,6 +33,8 @@ interface PersistentList<E>: List<E>, PersistentDataStructure<PersistentList<E>>
 
     fun add(element: E): PersistentList<E> = add(element, size)
 
+    fun addAll(elements: Collection<E>): PersistentList<E>
+
     fun remove(index: Int): PersistentList<E>
 
     fun set(element: E, index: Int): PersistentList<E>
