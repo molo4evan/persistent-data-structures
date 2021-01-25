@@ -98,18 +98,25 @@ class FingerTreeDeque<E> private constructor(
         return updated
     }
 
-    override fun <E> Iterable<E>.toPersistentDeque(): PersistentDeque<E> {
-        if (this is PersistentDeque<E>) return this
+    companion object {
 
-        var deque: PersistentDeque<E> = FingerTreeDeque()
-        for (e in this) {
-            deque = deque.add(e)
+        /**
+         * Converts iterable to persistent deque.
+         * @return created deque containing elements of iterable in the order of iteration
+         */
+        fun <E> fromIterable(iterable: Iterable<E>): PersistentDeque<E> {
+            if (iterable is PersistentDeque<E>) return iterable
+
+            var deque: PersistentDeque<E> = FingerTreeDeque()
+            for (e in iterable) {
+                deque = deque.add(e)
+            }
+            val result = deque as FingerTreeDeque<E>
+            val prev = result.previous as FingerTreeDeque<E>
+            prev.next = null
+            result.previous = null
+            return result
         }
-        val result = deque as FingerTreeDeque<E>
-        val prev = result.previous as FingerTreeDeque<E>
-        prev.next = null
-        result.previous = null
-        return result
     }
 
     override fun toList(): List<E> {

@@ -102,12 +102,6 @@ interface PersistentDeque<E>: Collection<E>, PersistentDataStructure<PersistentD
     fun addAll(c: Collection<E>): FingerTreeDeque<E>
 
     /**
-     * Converts iterable to persistent deque.
-     * @return created deque containing elements of iterable in the order of iteration
-     */
-    fun <E> Iterable<E>.toPersistentDeque(): PersistentDeque<E>
-
-    /**
      * Converts deque to list.
      * @return created list containing elements of deque in the same order
      */
