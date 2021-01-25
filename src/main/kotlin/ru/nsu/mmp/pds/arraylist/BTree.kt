@@ -100,13 +100,13 @@ class BTree<E: Any?> private constructor(
         constructor(factor: Int, vararg children: Node<E>) : this(children.asList(), factor)
 
         override fun atIndex(index: Int, layer: Int): E {
-            if (layer > 1) throw IllegalArgumentException("Incorrect layers count in tree!")
+            if (layer < 1) throw IllegalArgumentException("Incorrect layers count in tree!")
             val (childIndex, localIndex) = splitIndex(index, layer)
             return children[childIndex].atIndex(localIndex, layer - 1)
         }
 
         override fun updateAt(index: Int, layer: Int, value: E): Node<E> {
-            if (layer > 1) throw IllegalArgumentException("Incorrect layers count in tree!")
+            if (layer < 1) throw IllegalArgumentException("Incorrect layers count in tree!")
             val (childIndex, localIndex) = splitIndex(index, layer)
             val child = children[childIndex].updateAt(localIndex, layer - 1, value)
             val copy = children.toMutableList()

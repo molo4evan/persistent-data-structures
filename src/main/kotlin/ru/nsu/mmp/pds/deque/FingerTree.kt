@@ -135,8 +135,8 @@ class Empty<E> : FingerTree<E> {
 }
 
 class Single<E>(val element: E) : FingerTree<E> {
-    override fun pushFirst(value: E) = Deep(One(element), Empty(), One(value))
-    override fun pushLast(value: E) = Deep(One(value), Empty(), One(element))
+    override fun pushFirst(value: E) = Deep(One(value), Empty(), One(element))
+    override fun pushLast(value: E) = Deep(One(element), Empty(), One(value))
     override fun popFirst() = Pair<E, FingerTree<E>>(element, Empty())
     override fun popLast() = Pair<E, FingerTree<E>>(element, Empty())
 
@@ -181,8 +181,9 @@ class Deep<E>(
         return if (list.size == 1) {
             val node = deeper.popFirst()
             if (node == null) {
-                if (suffix is One) {
-                    Pair(value, Single(suffix.a))
+                val size = suffix.toList().size
+                if (size == 1) {
+                    Pair(value, Single((suffix as One).a))
                 } else {
                     val (newSuffix, newPrefix) = suffix.popLast()
                     Pair(value, Deep(newPrefix, Empty(), One(newSuffix)))
@@ -203,8 +204,9 @@ class Deep<E>(
         return if (list.size == 1) {
             val node = deeper.popLast()
             if (node == null) {
-                if (prefix is One) {
-                    Pair(value, Single(prefix.a))
+                val size = prefix.toList().size
+                if (size == 1){
+                    Pair(value, Single((prefix as One).a))
                 } else {
                     val (newPrefix, newSuffix) = prefix.popFirst()
                     Pair(value, Deep(One(newPrefix), Empty(), newSuffix))

@@ -8,12 +8,13 @@ open class BTreeArrayList<E: Any?> private constructor(
 ) : PersistentList<E> {
 
     constructor(
+        size: Int = 0,
         initialCapacity: Int = 64,
         factor: Int = 3,
         elementProvider: (() -> E)? = null,
         previous: PersistentList<E>? = null,
         next: PersistentList<E>? = null
-    ) : this(BTree(initialCapacity, factor, elementProvider), previous = previous, next = next)
+    ) : this(BTree(initialCapacity, factor, elementProvider), size, previous = previous, next = next)
 
     override fun tryToUndo() = previous
 
