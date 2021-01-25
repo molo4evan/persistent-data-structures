@@ -12,7 +12,7 @@ class BTree<E: Any?> private constructor(
     private val nodeCapacity = 2.0.pow(factor).toInt()
 
     private val capacity: Int
-        get() = nodeCapacity.toDouble().pow(levels).toInt()
+        get() = nodeCapacity.toDouble().pow(levels + 1).toInt()
 
     @Suppress("UNCHECKED_CAST")
     constructor(size: Int, factor: Int = 3, elementProvider: (() -> E)? = null) : this(factor, 0, root = null) {
@@ -67,6 +67,7 @@ class BTree<E: Any?> private constructor(
         open val factor: Int,
         val capacity: Int = 2.0.pow(factor).toInt()
     ) {
+        protected val mask = capacity - 1
 
         protected fun assertChildrenSize(size: Int) {
             if (size > capacity) {
@@ -91,8 +92,6 @@ class BTree<E: Any?> private constructor(
         val children: List<Node<E>>,
         override val factor: Int
     ) : Node<E>(factor) {
-        private val mask = capacity - 1
-
         init {
             assertChildrenSize(children.size)
         }
@@ -101,23 +100,20 @@ class BTree<E: Any?> private constructor(
 
         override fun atIndex(index: Int, layer: Int): E {
             if (layer < 1) throw IllegalArgumentException("Incorrect layers count in tree!")
-            val (childIndex, localIndex) = splitIndex(index, layer)
-            return children[childIndex].atIndex(localIndex, layer - 1)
+            val childIndex = getChildIndex(index, layer)
+            return children[childIndex].atIndex(index, layer - 1)
         }
 
         override fun updateAt(index: Int, layer: Int, value: E): Node<E> {
             if (layer < 1) throw IllegalArgumentException("Incorrect layers count in tree!")
-            val (childIndex, localIndex) = splitIndex(index, layer)
-            val child = children[childIndex].updateAt(localIndex, layer - 1, value)
+            val childIndex = getChildIndex(index, layer)
+            val child = children[childIndex].updateAt(index, layer - 1, value)
             val copy = children.toMutableList()
             copy[childIndex] = child
             return Branch(copy, factor)
         }
 
-        private fun splitIndex(index: Int, layer: Int) = Pair(
-            (index shr factor * layer) and mask,
-            index and mask
-        )
+        private fun getChildIndex(index: Int, layer: Int) = (index shr factor * layer) and mask
 
         override fun copy() = Branch(
             children.stream()
@@ -139,15 +135,17 @@ class BTree<E: Any?> private constructor(
 
         override fun atIndex(index: Int, layer: Int): E {
             if (layer != 0) throw IllegalArgumentException("Incorrect layers count in tree!")
-            assertIndex(index)
-            return elements[index]
+            val localIndex = index and mask
+            assertIndex(localIndex)
+            return elements[localIndex]
         }
 
         override fun updateAt(index: Int, layer: Int, value: E): Node<E> {
             if (layer != 0) throw IllegalArgumentException("Incorrect layers count in tree!")
-            assertIndex(index)
+            val localIndex = index and mask
+            assertIndex(localIndex)
             val copy = elements.toMutableList()
-            copy[index] = value
+            copy[localIndex] = value
             return Leaf(copy, factor)
         }
 
