@@ -10,32 +10,56 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
     - name: Set up JDK 11
       uses: actions/setup-java@v1
       with:
         java-version: 11
+    - name: Checkout code
+      uses: actions/checkout@v2
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
     - name: Create JAR with Gradle
       run: ./gradlew shadowJar
-    - name: Upload library JAR
-      uses: actions/upload-artifact@v2
-      with:
-        name: library-jar
-        path: build/libs/persistent-data-structures-1.0-SNAPSHOT-all.jar
     - name: Generate documentation
       run: ./gradlew dokkaGfm
-    - name: Upload documentation
-      uses: actions/upload-artifact@v2
+    - name: Update documentation
+      run: |
+        cp ./build/dokka/gfm/* ./documentation
+        git config --global user.name "GitHub CI"
+        git config --global user.email "noreply@github.com"
+        git add ./documentation git commit -m "CI: Updated documentation"
+        git push
+    - name: Checkout code
+      uses: actions/checkout@v2
+    - name: Grant execute permission for gradlew
+      run: chmod +x gradlew
+    - name: Create Release
+      id: create_release
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        name: documentation
-        path: build/dokka/gfm
+        tag_name: ${{ github.ref }}
+        release_name: Release ${{ github.ref }}
+        draft: false
+        prerelease: false
+    - name: Upload Release JAR
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }} 
+        asset_path: ./build/libs/persistent-data-structures-1.0-SNAPSHOT-all.jar
+        asset_name: persistent-data-structures.jar
+        asset_content_type: application/java-archive
     - name: Run benchmarks
       run: ./gradlew jmh
-    - name: Upload benchmark results
-      uses: actions/upload-artifact@v2
+    - name: Upload benchmark results to Release
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        name: benchmark-results
-        path: build/reports/jmh/results.json
-      
+        upload_url: ${{ steps.create_release.outputs.upload_url }} 
+        asset_path: ./build/reports/jmh/results.json
+        asset_name: jmh-results.json
+        asset_content_type: application/json
