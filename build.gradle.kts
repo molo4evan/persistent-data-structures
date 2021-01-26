@@ -39,8 +39,8 @@ jmh {
     fork = 1
     warmupIterations = 1
     iterations = 1
-    warmup = "3s"
-    timeOnIteration = "5s"
+    warmup = "2s"
+    timeOnIteration = "3s"
     timeout = "10s"
 }
 
