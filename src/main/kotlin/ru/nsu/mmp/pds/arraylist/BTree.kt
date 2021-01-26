@@ -45,7 +45,9 @@ class BTree<E: Any?> private constructor(
             expand()
         } else this
 
-        return BTree(factor, tree.levels, tree.root!!.updateAt(index, tree.levels, value))
+        val updated = tree.root!!.updateAt(index, tree.levels, value)
+        if (updated === this) return this
+        return BTree(factor, tree.levels, updated)
     }
 
     private fun expand(): BTree<E> {
@@ -108,6 +110,7 @@ class BTree<E: Any?> private constructor(
             if (layer < 1) throw IllegalArgumentException("Incorrect layers count in tree!")
             val childIndex = getChildIndex(index, layer)
             val child = children[childIndex].updateAt(index, layer - 1, value)
+            if (children[childIndex] === child) return this
             val copy = children.toMutableList()
             copy[childIndex] = child
             return Branch(copy, factor)
@@ -144,6 +147,7 @@ class BTree<E: Any?> private constructor(
             if (layer != 0) throw IllegalArgumentException("Incorrect layers count in tree!")
             val localIndex = index and mask
             assertIndex(localIndex)
+            if (elements[localIndex] == value) return this
             val copy = elements.toMutableList()
             copy[localIndex] = value
             return Leaf(copy, factor)

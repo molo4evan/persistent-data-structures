@@ -9,7 +9,7 @@ import kotlin.random.Random
 open class ArraySet {
     @Benchmark
     fun custom(blackhole: Blackhole, state: SingleFilledArrayState) {
-        blackhole.consume(state.custom.set(state.element, randomIndex(state)))
+        blackhole.consume(state.custom.set(state.element + Random.Default.nextInt().toString(), randomIndex(state)))
     }
 
     @Benchmark

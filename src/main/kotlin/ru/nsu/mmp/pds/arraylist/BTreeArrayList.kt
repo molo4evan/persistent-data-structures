@@ -1,5 +1,7 @@
 package ru.nsu.mmp.pds.arraylist
 
+import kotlin.math.max
+
 open class BTreeArrayList<E : Any?> private constructor(
     private val tree: BTree<E>,
     override val size: Int = 0,
@@ -14,7 +16,7 @@ open class BTreeArrayList<E : Any?> private constructor(
         elementProvider: (() -> E)? = null,
         previous: PersistentList<E>? = null,
         next: PersistentList<E>? = null
-    ) : this(BTree(initialCapacity, factor, elementProvider), size, previous = previous, next = next)
+    ) : this(BTree(max(initialCapacity, size), factor, elementProvider), size, previous = previous, next = next)
 
     override fun tryToUndo() = previous
 
@@ -85,6 +87,7 @@ open class BTreeArrayList<E : Any?> private constructor(
         if (index < 0 || index >= size) throw ArrayIndexOutOfBoundsException()
 
         val updated = tree.updateAt(index, element)
+        if (updated === tree) return this
         val newList = BTreeArrayList(updated, size, this)
         next = newList
         return newList
