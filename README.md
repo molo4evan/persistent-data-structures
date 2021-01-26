@@ -1,6 +1,5 @@
 [![Inline docs](https://img.shields.io/badge/docs-latest-gray)](https://github.com/molo4evan/persistent-data-structures/tree/master/documentation/index.md) 
 [![Build](https://github.com/molo4evan/persistent-data-structures/workflows/CI/badge.svg?branch=master)](https://github.com/molo4evan/persistent-data-structures/actions?query=workflow%3ACI) 
-[![Release](https://github.com/molo4evan/persistent-data-structures/workflows/Release/badge.svg)](https://github.com/molo4evan/persistent-data-structures/actions?query=workflow%3ARelease) 
 [![codecov](https://codecov.io/gh/molo4evan/persistent-data-structures/branch/master/graph/badge.svg?token=F0XJ7SXC54)](https://codecov.io/gh/molo4evan/persistent-data-structures)
 
 # Persistent Data Structures
