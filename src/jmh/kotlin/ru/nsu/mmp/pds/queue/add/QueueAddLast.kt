@@ -36,7 +36,7 @@ open class QueueAddLast {
     fun procrastination(blackhole: Blackhole, state: PreInitQueueState) {
         var seq = state.procrastination
         for (i in 0 until state.size) {
-            seq = seq.append(state.element)
+            seq = seq.append(state.element).eager()
         }
         blackhole.consume(seq)
     }

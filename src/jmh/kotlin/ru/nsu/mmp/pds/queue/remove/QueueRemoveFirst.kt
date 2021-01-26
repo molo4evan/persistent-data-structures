@@ -35,7 +35,7 @@ open class QueueRemoveFirst {
     fun procrastination(blackhole: Blackhole, state: PreFilledQueueState) {
         var seq = state.procrastination
         for (i in 0 until state.size) {
-            seq = seq.tail().orThrow()
+            seq = seq.tail().eager().orThrow()
         }
         blackhole.consume(seq)
     }
