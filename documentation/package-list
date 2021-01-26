@@ -1,0 +1,8 @@
+$dokka.format:gfm-v1
+$dokka.linkExtension:md
+
+ru.nsu.mmp.pds
+ru.nsu.mmp.pds.arraylist
+ru.nsu.mmp.pds.deque
+ru.nsu.mmp.pds.map
+
