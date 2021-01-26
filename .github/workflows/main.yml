@@ -31,13 +31,11 @@ jobs:
       with:
         name: documentation
         path: build/dokka/gfm
-  benchmarks:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Run benchmarks
-        run: ./gradlew jmh
-      - name: Upload benchmark results
-        uses: actions/upload-artifact@v2
-        with:
-          name: benchmark-results
-          path: build/reports/jmh/results.json
+    - name: Run benchmarks
+      run: ./gradlew jmh
+    - name: Upload benchmark results
+      uses: actions/upload-artifact@v2
+      with:
+        name: benchmark-results
+        path: build/reports/jmh/results.json
+      
