@@ -27,7 +27,8 @@ jobs:
         cp -r ./build/dokka/gfm/* ./documentation
         git config --global user.name "GitHub CI"
         git config --global user.email "noreply@github.com"
-        git add ./documentation git commit -m "CI: Updated documentation"
+        git add ./documentation 
+        git commit -m "CI: Updated documentation"
         git push
     - name: Create Release
       id: create_release
