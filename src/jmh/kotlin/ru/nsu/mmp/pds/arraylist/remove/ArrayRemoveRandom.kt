@@ -26,7 +26,7 @@ open class ArrayRemoveRandom {
     fun procrastination(blackhole: Blackhole, state: PreFilledArrayState) {
         var arr = state.procrastination
         for (i in 1..state.size) {
-            arr = arr.delete(randomIndex(state.size - i + 1).toLong())
+            arr = arr.delete(randomIndex(state.size - i + 1).toLong()).eager()
         }
         blackhole.consume(arr)
     }
