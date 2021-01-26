@@ -26,7 +26,7 @@ open class ArrayAddFirst {
     fun procrastination(blackhole: Blackhole, state: PreInitArrayState) {
         var arr = state.procrastination
         for (i in 1..state.size) {
-            arr = arr.insert(0, state.element)
+            arr = arr.insert(0, state.element).eager()
         }
         blackhole.consume(arr)
     }

@@ -30,7 +30,7 @@ open class ArrayGet {
 
     @Benchmark
     fun procrastination(blackhole: Blackhole, state: SingleFilledArrayState) {
-        blackhole.consume(state.procrastination.element(randomIndex(state).toLong()))
+        blackhole.consume(state.procrastination.element(randomIndex(state).toLong()).eager())
     }
 
     private fun randomIndex(state: BaseState) = Random.Default.nextInt(state.size)

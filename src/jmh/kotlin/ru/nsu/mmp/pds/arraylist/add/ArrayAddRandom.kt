@@ -20,7 +20,7 @@ open class ArrayAddRandom {
 
     @Benchmark
     fun procrastination(blackhole: Blackhole, state: SingleFilledArrayState) {
-        blackhole.consume(state.procrastination.insert(randomIndex(state).toLong(), state.element))
+        blackhole.consume(state.procrastination.insert(randomIndex(state).toLong(), state.element).eager())
     }
 
     private fun randomIndex(state: BaseState) = Random.Default.nextInt(state.size)

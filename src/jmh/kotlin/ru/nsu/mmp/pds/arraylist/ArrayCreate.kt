@@ -31,6 +31,6 @@ open class ArrayCreate {
 
     @Benchmark
     fun procrastination(blackhole: Blackhole, state: WideBenchState) {
-        blackhole.consume(Sequence.from(state.elements))
+        blackhole.consume(Sequence.from(state.elements).eager())
     }
 }

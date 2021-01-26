@@ -26,7 +26,7 @@ open class ArrayAddLast {
     fun procrastination(blackhole: Blackhole, state: PreInitArrayState) {
         var arr = state.procrastination
         for (i in 1..state.size) {
-            arr = arr.append(state.element)
+            arr = arr.append(state.element).eager()
         }
         blackhole.consume(arr)
     }
