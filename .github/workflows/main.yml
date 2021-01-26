@@ -21,7 +21,7 @@ jobs:
     - name: Build project
       run: ./gradlew build
     - name: Upload test coverage to codecov.io
-    - uses: codecov/codecov-action@v1
+      uses: codecov/codecov-action@v1
       with:
         token: ${{ secrets.CODECOV_TOKEN }}
     - name: Generate documentation
