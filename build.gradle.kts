@@ -57,5 +57,8 @@ tasks {
     jacocoTestReport {
         dependsOn(test)
         sourceSets(sourceSets.main.get())
+        reports {
+            xml.isEnabled = true
+        }
     }
 }
