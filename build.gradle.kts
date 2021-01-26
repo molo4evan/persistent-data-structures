@@ -5,6 +5,7 @@ plugins {
     id("me.champeau.gradle.jmh") version "0.5.2"
     id("org.jetbrains.dokka") version "1.4.20"
     id("com.github.johnrengelman.shadow") version "6.1.0"
+    jacoco
 }
 
 group = "ru.nsu.mmp.ru.nsu.mmp.pds"
@@ -50,5 +51,11 @@ tasks {
 
     test {
         useJUnitPlatform()
+        finalizedBy(jacocoTestReport)
+    }
+
+    jacocoTestReport {
+        dependsOn(test)
+        sourceSets(sourceSets.main.get())
     }
 }
