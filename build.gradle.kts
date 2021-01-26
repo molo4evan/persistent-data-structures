@@ -3,6 +3,8 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 plugins {
     kotlin("jvm") version "1.4.21"
     id("me.champeau.gradle.jmh") version "0.5.2"
+    id("org.jetbrains.dokka") version "1.4.20"
+    id("com.github.johnrengelman.shadow") version "6.1.0"
 }
 
 group = "ru.nsu.mmp.ru.nsu.mmp.pds"
@@ -10,6 +12,7 @@ version = "1.0-SNAPSHOT"
 
 repositories {
     mavenCentral()
+    jcenter()
 
     maven { url = uri("https://plugins.gradle.org/m2/") }
     maven { url = uri("https://jitpack.io") }
@@ -23,6 +26,8 @@ dependencies {
 
     testImplementation("org.junit.jupiter:junit-jupiter-api:5.7.0")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.7.0")
+
+//    dokkaJavadocPlugin("org.jetbrains.dokka:kotlin-as-java-plugin:1.4.20")
 }
 
 jmh {

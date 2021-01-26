@@ -22,15 +22,6 @@ open class ArrayAddFirst {
     }
 
     @Benchmark
-    fun functionalArray(blackhole: Blackhole, state: SingleFilledArrayState) {
-        var arr = state.custom
-        for (i in 1..state.size) {
-            arr = arr.add(state.element, 0)
-        }
-        blackhole.consume(arr)
-    }
-
-    @Benchmark
     fun functionalList(blackhole: Blackhole, state: SingleFilledArrayState) {
         var arr = state.functionalList
         for (i in 1..state.size) {

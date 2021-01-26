@@ -13,7 +13,7 @@ open class ArraySet {
     }
 
     @Benchmark
-    fun baseline(blackhole: Blackhole, state: SingleFilledArrayState) {
+    fun baseline(state: SingleFilledArrayState) {
         state.baseline[randomIndex(state)] = state.element
     }
 

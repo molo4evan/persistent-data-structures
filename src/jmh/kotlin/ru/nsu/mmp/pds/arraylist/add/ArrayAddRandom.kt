@@ -14,7 +14,7 @@ open class ArrayAddRandom {
     }
 
     @Benchmark
-    fun baseline(blackhole: Blackhole, state: SingleFilledArrayState) {
+    fun baseline(state: SingleFilledArrayState) {
         state.baseline.add(randomIndex(state), state.element)
     }
 
